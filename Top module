@@ -1,0 +1,91 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    16:57:06 10/13/2021 
+-- Design Name: 
+-- Module Name:    Top_Top_Model - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Top_Top_Model is
+	port 
+		(
+			Clock , Reset : in std_logic;
+			Input_X , Input_Y : in std_logic_vector (3 downto 0);
+			Anode_Control                         : out std_logic_vector (3 downto 0);
+			Seven_Segment                         : out std_logic_vector (6 downto 0)	
+		);
+end Top_Top_Model;
+
+architecture Behavioral of Top_Top_Model is
+
+component Top_model
+	port 
+		(
+			Clock , Reset : in std_logic;
+			Input_X , Input_Y : in std_logic_vector (3 downto 0);
+			Output_X , Output_Y : out std_logic_vector (3 downto 0)
+			
+		);
+end component;
+
+component Topmodule_SSV
+		port (
+					--Input_A , Input_B , Input_C , Input_D : in std_logic_vector (3 downto 0);
+					Clock_Input                           : in std_logic;
+					Input_B , Input_D                     : in std_logic_vector (3 downto 0);
+					Anode_Control                         : out std_logic_vector (3 downto 0);
+					Seven_Segment                         : out std_logic_vector (6 downto 0)
+		);
+end component;
+
+	signal Num_x , Num_y : std_logic_vector (3 downto 0);
+
+
+begin
+
+Calculation : Top_model
+port map
+(
+	Clock => Clock,
+	Reset => Reset,
+	Input_X => Input_X,
+	Input_Y => Input_Y,
+	Output_X => Num_x,
+	Output_Y => Num_y
+);
+
+Viewing : Topmodule_SSV
+port map
+(
+	Clock_Input => Clock,
+	Input_B => Num_x,
+	Input_D => Num_y,
+	Anode_Control => Anode_Control,
+	Seven_Segment => Seven_Segment
+);
+
+
+end Behavioral;
