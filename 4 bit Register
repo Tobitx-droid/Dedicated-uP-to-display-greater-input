@@ -1,0 +1,53 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    17:05:18 10/12/2021 
+-- Design Name: 
+-- Module Name:    Register - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity RRegister is
+	port
+		(
+			Clock , Load : in std_logic;
+			D            : in std_logic_vector (3 downto 0);
+			Q            : out std_logic_vector (3 downto 0)
+		);
+end RRegister;
+
+architecture Behavioral of RRegister is
+
+begin
+			process (Clock)
+				begin
+					if (rising_edge(Clock)) then 
+						if (load = '1') then 
+							Q <= D;
+						end if;
+					end if;
+			end process;
+			
+end Behavioral;
