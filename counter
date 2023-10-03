@@ -1,0 +1,57 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    10:49:00 10/06/2021 
+-- Design Name: 
+-- Module Name:    Counter - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Counter is
+	port (
+				Clock_Counter , reset  : in std_logic;
+				Count                  : out std_logic_vector (1 downto 0)
+	);
+	
+end Counter;
+
+architecture Behavioral of Counter is
+
+		signal temp_count : std_logic_vector (1 downto 0) := "00";
+
+begin
+		process (Clock_Counter )
+			begin
+				if (rising_edge(Clock_Counter)) then
+					if (reset = '1') then
+					temp_count <= temp_count + 1;
+				end if;
+				end if;
+		end process;
+
+	Count <= temp_count;
+
+end Behavioral;
