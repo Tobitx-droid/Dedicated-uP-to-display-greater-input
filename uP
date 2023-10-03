@@ -1,0 +1,93 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    16:32:07 10/13/2021 
+-- Design Name: 
+-- Module Name:    Top_model - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Top_model is
+	port 
+		(
+			Clock , Reset : in std_logic;
+			Input_X , Input_Y : in std_logic_vector (3 downto 0);
+			Output_X , Output_Y : out std_logic_vector (3 downto 0)
+			
+		);
+end Top_model;
+
+architecture Behavioral of Top_model is
+
+component Datapath 
+	port 
+			(
+				Clock , Xload , Yload , In_xy           : in std_logic;
+				Input_x , Input_y                       : in std_logic_vector (3 downto 0);
+				Output_x , Output_y                     : out std_logic_vector (3 downto 0);
+				Out_xy                                  : out std_logic
+			);
+end component;
+
+component Control_Unit
+	port 
+		(
+			Clock , Out_xy , reset  : In std_logic;
+			Xload , Yload , In_xy   : out std_logic
+		);
+end component;
+
+		signal Xload , Yload , In_xy , Out_xy: std_logic;
+
+
+begin
+
+Path : Datapath
+port map 
+(
+	Clock    => Clock,
+	Xload    => Xload,
+	Yload    => Yload,
+	In_xy    => In_xy,
+	Input_x  => Input_x,
+	Input_y  => Input_y,
+	Output_x => Output_x,
+	Output_y => Output_y,
+	Out_xy   => Out_xy
+);
+
+Control : Control_Unit
+port map
+(
+	Clock   => Clock,
+	Out_xy  => Out_xy,
+	Reset   => Reset,
+	Xload   => Xload,
+	Yload   => Yload,
+	In_xy   => In_xy
+);
+
+
+end Behavioral;
