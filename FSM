@@ -1,0 +1,106 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    16:02:59 10/13/2021 
+-- Design Name: 
+-- Module Name:    Control_Unit - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Control_Unit is
+	port 
+		(
+			Clock , Out_xy , reset  : In std_logic;
+			Xload , Yload , In_xy   : out std_logic
+		);
+end Control_Unit;
+
+architecture Behavioral of Control_Unit is
+	type state is (ST0 , ST1 , ST2 , ST3);
+	signal PS , NS : state;
+
+begin
+		process (clock , reset)
+			begin
+				if (reset = '1') then
+				PS <= ST0;
+				elsif (rising_edge(clock)) then
+				PS <= NS;
+				end if;
+		end process;
+		
+		NextState_Logic : process (PS , Out_xy)
+			begin
+				case PS is 
+				
+				when ST0 => 
+				Ns <= ST1;
+				
+				when ST1 => 
+				if (Out_xy = '0') then 
+				NS <= ST2;
+				else
+				NS <= ST3;
+				end if;
+				
+				when ST2 => 
+				NS <= ST2;
+				
+				when ST3 =>
+				NS <= ST3;
+				
+				end case;
+			
+		end process;
+		
+		Output_logic : process (PS)
+			begin
+			case (PS) is
+			
+			when ST0 => 
+				Xload <= '1';
+				Yload <= '1';
+				In_xy <= '0';
+				
+			when ST1 =>
+				Xload <= '0';
+				Yload <= '1';
+				In_xy <= '1';
+				
+			when ST2 => 
+				Xload <= '0';
+				Yload <= '0';
+				In_xy <= '1';
+				
+			when ST3 => 
+				Xload <= '0';
+				Yload <= '0';
+				In_xy <= '0';
+				
+				
+			end case;
+			end process;
+
+end Behavioral;
