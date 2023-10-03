@@ -1,0 +1,122 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    15:08:17 10/13/2021 
+-- Design Name: 
+-- Module Name:    Top - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Datapath is
+	port 
+			(
+				Clock , Xload , Yload , In_xy           : in std_logic;
+				Input_x , Input_y                       : in std_logic_vector (3 downto 0);
+				Output_x , Output_y                     : out std_logic_vector (3 downto 0);
+				Out_xy                                  : out std_logic
+			);
+end Datapath;
+
+architecture Behavioral of Datapath is
+
+component Comparator
+	port 
+		(
+				Com_Input_1 : in std_logic_vector (3 downto 0);
+				Com_Input_2 : in std_logic_vector (3 downto 0);
+				Com_Output  : out std_logic
+		);
+end component;
+
+component Out_Buffer
+	port 
+		(
+			Buff_Input : in std_logic_vector (3 downto 0);
+			Output     : in std_logic;
+			Buff_Output : out std_logic_vector (3 downto 0)
+		);
+end component;
+
+component RRegister
+	port
+		(
+			Clock , Load : in std_logic;
+			D            : in std_logic_vector (3 downto 0);
+			Q            : out std_logic_vector (3 downto 0)
+		);
+end component;
+
+	signal RegX_buff , RegY_buff : std_logic_vector (3 downto 0);
+	signal sigOut     : std_logic;
+
+
+begin
+		sigOut <= In_xy;
+
+	
+	RegisterX : RRegister
+	port map
+	(
+		Clock => Clock,
+		Load  => Xload,
+		D     => Input_x,
+		Q     => RegX_buff
+	);
+	
+	RegisterY : RRegister
+	port map
+	(
+		Clock => Clock,
+		Load  => Yload,
+		D     => Input_y,
+		Q     => RegY_buff
+	);
+	
+	Compare : Comparator 
+	port map
+	(
+		Com_Input_1 => Input_x,
+		Com_input_2 => Input_y,
+		Com_Output  =>  Out_xy
+	);
+	
+	BufferX : Out_Buffer
+	port map
+	(
+		Buff_Input  => RegX_buff,
+		Output      => sigOut,
+		Buff_Output => Output_x
+	);
+	
+	BufferY : Out_Buffer
+	port map
+	(
+		Buff_Input  => RegY_buff,
+		Output      => not sigOut,
+		Buff_Output => Output_y
+	);
+
+
+end Behavioral;
