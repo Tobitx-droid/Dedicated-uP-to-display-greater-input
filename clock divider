@@ -1,0 +1,59 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    10:23:29 10/06/2021 
+-- Design Name: 
+-- Module Name:    Clk_Divider - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Clk_Divider is
+	port (
+			Clock_50M : in std_logic;
+			Clock_125 : out std_logic
+	);
+end Clk_Divider;
+
+architecture Behavioral of Clk_Divider is
+
+		signal counter : integer:=1;
+		signal temp    : std_logic := '0';
+
+begin
+	process (Clock_50M , temp)
+		begin
+			if (rising_edge(Clock_50M)) then
+				counter <= counter + 1;
+			if (counter = 100000) then
+				temp <= not temp;
+				counter <= 1;
+			end if;
+			end if;
+	end process;
+
+	Clock_125 <= temp;
+
+end Behavioral;
