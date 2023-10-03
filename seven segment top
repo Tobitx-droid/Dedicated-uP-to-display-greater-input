@@ -1,0 +1,134 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    11:13:21 10/06/2021 
+-- Design Name: 
+-- Module Name:    Topmodule_SSV - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Topmodule_SSV is
+		port (
+					--Input_A , Input_B , Input_C , Input_D : in std_logic_vector (3 downto 0);
+					Clock_Input                           : in std_logic;
+					Input_B , Input_D                     : in std_logic_vector (3 downto 0);
+					Anode_Control                         : out std_logic_vector (3 downto 0);
+					Seven_Segment                         : out std_logic_vector (6 downto 0)
+		);
+end Topmodule_SSV;
+
+architecture Behavioral of Topmodule_SSV is
+
+component Anode_Controller
+	port(
+			Anode_Input : in std_logic_vector ( 1 downto 0);
+			Anode_Output : out std_logic_vector ( 3 downto 0)
+	);
+end component;
+
+component BCD_to_7Segment 
+	port (
+			Input_Segment : in  std_logic_vector (3 downto 0);
+			Output_Segment: out std_logic_vector (6 downto 0)
+	);
+end component;
+
+component Clk_Divider
+	port (
+			Clock_50M : in std_logic;
+			Clock_125 : out std_logic
+	);
+end component;
+
+component Counter
+	port (
+				Clock_Counter , reset  : in std_logic;
+				Count                  : out std_logic_vector (1 downto 0)
+	);
+	
+end component;
+
+component Mux4_4x1 
+	port (
+			Input_A , Input_B , Input_C , Input_D : in std_logic_vector (3 downto 0);
+			Sel                                   : in std_logic_vector (1 downto 0);
+			Mux_Output                            : out std_logic_vector (3 downto 0)
+			);
+end component;
+
+
+  signal Clk_to_Counter : std_logic;
+  signal Counter_to_Anode  : std_logic_vector (1 downto 0);
+  signal Mux_to_BCD  : std_logic_vector (3 downto 0);
+
+begin
+
+Anode_Decoder : Anode_Controller
+port map
+(
+	Anode_Input => Counter_to_Anode,
+	Anode_Output => Anode_Control
+);
+
+Clock_Divider : Clk_Divider
+port map
+(
+	Clock_50M => Clock_Input,
+	Clock_125 => Clk_to_Counter
+);
+
+Twobit_Counter : Counter
+port map
+(
+	Clock_Counter => Clk_to_Counter,
+	Reset => '1',
+	Count => Counter_to_Anode
+);
+
+Multiplixer : Mux4_4x1
+port map
+(
+	Input_A => "0000",
+	Input_B => Input_B,
+	Input_C => "0000",
+	Input_D => Input_D,
+	--Input_A => Input_A,
+	--Input_B => Input_B,
+	--Input_C => Input_C,
+	--Input_D => Input_D,
+	Sel     => Counter_to_Anode,
+	Mux_Output => Mux_to_BCD
+);
+  
+Segment_Display : BCD_to_7Segment
+port map
+(
+	Input_Segment => Mux_to_BCD,
+	Output_Segment => Seven_Segment
+);
+
+
+
+end Behavioral;
