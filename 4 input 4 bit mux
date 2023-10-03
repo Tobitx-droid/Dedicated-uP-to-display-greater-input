@@ -1,0 +1,50 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    10:43:42 10/06/2021 
+-- Design Name: 
+-- Module Name:    Mux4_4x1 - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Mux4_4x1 is
+	port (
+			Input_A , Input_B , Input_C , Input_D : in std_logic_vector (3 downto 0);
+			Sel                                   : in std_logic_vector (1 downto 0);
+			Mux_Output                            : out std_logic_vector (3 downto 0)
+			);
+end Mux4_4x1;
+
+architecture Behavioral of Mux4_4x1 is
+
+begin
+		
+		Mux_Output <= Input_A when Sel = "00" else
+						  Input_B when Sel = "01" else
+						  Input_C when Sel = "10" else
+						  Input_D;
+
+
+end Behavioral;
